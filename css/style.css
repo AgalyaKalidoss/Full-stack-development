@@ -1,0 +1,39 @@
+.navbar{
+    background-color:rgb(96, 42, 42);
+    padding:15px;
+    display: flex;
+    flex-direction: row;
+}
+.dis{
+    margin-left: 800px;
+}
+.navbar-nav{
+    display:flex;
+    flex-direction:row;
+}
+.logo{
+    border-radius:50%;
+}
+.nav-item{
+    margin-right:25px;
+}
+
+.nav-link{
+    color:rgb(75, 48, 48);
+    font-size:16px;
+    text-decoration:none;
+}
+
+.nav-link:hover{
+    color:#f8f9fa;
+}
+
+.navbar-brand{
+    color:white;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.navbar-brand:hover{
+    color:white;
+}

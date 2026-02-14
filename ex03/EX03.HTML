@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KCET Learning | Quiz Application</title>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: linear-gradient(to right, #eae1e9, #a1859b);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quiz-wrapper {
+            background: #ffffff;
+            width: 700px;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        h3 {
+            text-align: center;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .info {
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .question-box {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .options label {
+            display: block;
+            background: #f1f3f6;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .options label:hover {
+            background: #e3e9ff;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 6px;
+            background: #4a69bd;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #b2b9d7;
+        }
+
+        .result-box {
+            display: none;
+            text-align: center;
+        }
+
+        .result-box h2 {
+            color: #2c3e50;
+        }
+
+        .result-box button {
+            background: #28a745;
+            margin-top: 15px;
+        }
+
+        .result-box button:hover {
+            background: #1e7e34;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-wrapper">
+    <h1>KCET Learning</h1>
+    <h3>Interactive Quiz Application</h3>
+    <div class="info">
+        Total Questions: <b>5</b>
+    </div>
+
+    <form id="quizForm">
+        <div id="quizContent">
+            <div class="question-box"></div>
+            <div class="options"></div>
+        </div>
+
+        <div class="navigation">
+            <button type="button" id="prevBtn">Previous</button>
+            <button type="button" id="nextBtn">Next</button>
+        </div>
+    </form>
+
+    <div class="result-box"></div>
+</div>
+
+<script>
+$(document).ready(function () {
+
+    const quizData = [
+        { question: "Who is the Father of the Indian Constitution?", options: ["Mahatma Gandhi", "B. R. Ambedkar", "Jawaharlal Nehru", "Rajendra Prasad"], answer: 1 },
+        {
+            question: "Which symbol is used for class selector in CSS?",
+            options: ["#", ".", "*", "&"],
+            answer: 1
+        },
+        {
+            question: "Which JavaScript library simplifies DOM manipulation?",
+            options: ["React", "Angular", "jQuery", "Vue"],
+            answer: 2
+        },
+        { question: "Which MongoDB command is used to retrieve documents from a collection?", options: ["db.find()", "db.collection.find()", "db.select()", "db.get()"], answer: 1 },
+        {
+            question: "Which event occurs when a button is clicked?",
+            options: ["onchange", "onmouseover", "onclick", "onload"],
+            answer: 2
+        }
+    ];
+
+    let currentIndex = 0;
+    let userAnswers = [];
+
+    function loadQuestion(index) {
+        $("#quizContent").fadeOut(200, function () {
+            $(".question-box").text(
+                "Question " + (index + 1) + ": " + quizData[index].question
+            );
+            $(".options").html("");
+
+            quizData[index].options.forEach((opt, i) => {
+                let checked = userAnswers[index] === i ? "checked" : "";
+                $(".options").append(`
+                    <label>
+                        <input type="radio" name="answer" value="${i}" ${checked}>
+                        ${opt}
+                    </label>
+                `);
+            });
+
+            $("#quizContent").fadeIn(200);
+        });
+    }
+
+    $("#nextBtn").click(function () {
+        let selected = $("input[name='answer']:checked").val();
+
+        if (selected === undefined) {
+            alert("Please select an answer before proceeding!");
+            return;
+        }
+
+        userAnswers[currentIndex] = parseInt(selected);
+
+        if (currentIndex < quizData.length - 1) {
+            currentIndex++;
+            loadQuestion(currentIndex);
+        } else {
+            showResult();
+        }
+    });
+
+    $("#prevBtn").click(function () {
+        if (currentIndex > 0) {
+            currentIndex--;
+            loadQuestion(currentIndex);
+        }
+    });
+
+    function showResult() {
+        let score = 0;
+
+        quizData.forEach((q, i) => {
+            if (q.answer === userAnswers[i]) {
+                score++;
+            }
+        });
+
+        $("#quizForm").hide();
+        $(".result-box").html(`
+            <h2>Quiz Completed</h2>
+            <p>You answered <b>${score}</b> out of <b>${quizData.length}</b> questions correctly.</p>
+            <button onclick="location.reload()">Restart Quiz</button>
+        `).fadeIn();
+    }
+
+    loadQuestion(currentIndex);
+});
+</script>
+
+</body>
+</html>

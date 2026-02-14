@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="taskApp">
+<head>
+    <meta charset="UTF-8">
+    <title>TaskMaster Hub | To-Do List</title>
+
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background :#ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Trebuchet MS', sans-serif;
+        }
+        .todo-container {
+            width: 700px;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.25);
+        }
+        h1 {
+            text-align: center;
+            color: #8e44ad;
+            font-family: 'Georgia', serif;
+            margin-bottom: 5px;
+        }
+        p {
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        .status {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #444;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fceef5;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .task-text {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .add-btn {
+            background: #8e44ad;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .add-btn:hover {
+            background: #6c3483;
+        }
+
+        .filters {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .filters button {
+            background: #f39c12;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            margin: 3px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filters button:hover {
+            background: #d68910;
+        }
+    </style>
+</head>
+
+<body ng-controller="TodoController">
+
+<div class="todo-container">
+    <h1>TaskMaster Hub</h1>
+    <p>Organize your daily tasks efficiently and stay productive</p>
+
+    <div class="status">
+        {{pending()}} of {{todos.length}} remaining
+    </div>
+
+    <ul>
+        <li ng-repeat="todo in todos | filter:statusFilter">
+            <input type="checkbox" ng-model="todo.completed">
+            <span class="task-text" ng-class="{completed: todo.completed}">
+                {{todo.task}}
+            </span>
+            <button class="delete-btn" ng-click="remove($index)">X</button>
+        </li>
+    </ul>
+
+    <input type="text" ng-model="newTask" placeholder="Add new task here">
+    <button class="add-btn" ng-click="addTask()">Add</button>
+
+    <div class="filters">
+        <button ng-click="showAll()">All</button>
+        <button ng-click="showPending()">Pending</button>
+        <button ng-click="showCompleted()">Completed</button>
+    </div>
+</div>
+
+<script>
+var app = angular.module("taskApp", []);
+
+app.controller("TodoController", function($scope) {
+
+    $scope.todos = [
+        { task: "Learn AngularJS basics", completed: false },
+        { task: "Build To-Do App", completed: false },
+        { task: "Practice directives", completed: true },
+        { task: "Revise data binding", completed: false }
+    ];
+
+    $scope.statusFilter = {};
+
+    $scope.addTask = function () {
+        if ($scope.newTask) {
+            $scope.todos.push({ task: $scope.newTask, completed: false });
+            $scope.newTask = "";
+        }
+    };
+
+    $scope.remove = function (index) {
+        $scope.todos.splice(index, 1);
+    };
+    $scope.pending = function () {
+        var count = 0;
+        angular.forEach($scope.todos, function(todo) {
+            if (!todo.completed) count++;
+        });
+        return count;
+    };
+    $scope.showAll = function () {
+        $scope.statusFilter = {};
+    };
+
+    $scope.showPending = function () {
+        $scope.statusFilter = { completed: false };
+    };
+
+    $scope.showCompleted = function () {
+        $scope.statusFilter = { completed: true };
+    };
+});
+</script>
+
+</body>
+</html>
