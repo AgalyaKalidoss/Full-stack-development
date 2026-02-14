@@ -32,7 +32,6 @@ Data Binding: Synchronizing data between the model and the view.
 SPA Development: Creating Single Page Applications for seamless navigation.
 
 Event Handling: Managing user interactions via JavaScript and jQuery.
-
 5. Setup and Execution
 Clone: git clone <repository-url>
 
